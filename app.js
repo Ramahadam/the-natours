@@ -1,15 +1,31 @@
-const express = require('express');
 const fs = require('fs');
+const express = require('express');
+const morgan = require('morgan');
+
 const app = express();
 
-//using middleware - below line of code will allow us to acces req.body
+// 1) MIDDLEWARES
+app.use(morgan('dev'));
+
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log('Hello from middleware 🚀');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestedAt = new Date().toISOString();
+  next();
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours.json`, 'utf-8')
 );
 
+// 2) ROUTES HANDLERS
 const getAllTours = (req, res) => {
+  console.log(req.requestedAt);
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -94,6 +110,41 @@ const deleteTour = (req, res) => {
   });
 };
 
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not ye defined!',
+  });
+};
+
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not ye defined!',
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not ye defined!',
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not ye defined!',
+  });
+};
+
 // app.get('/api/v1/tours', getAllTours);
 
 // app.get('/api/v1/tours/:id', getTour);
@@ -104,6 +155,9 @@ const deleteTour = (req, res) => {
 
 // app.delete('/api/v1/tours/:id', deleteTour);
 
+// 3) ROUTES
+
+// Tour Routes
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
 
 app
@@ -112,6 +166,15 @@ app
   .patch(updateTour)
   .delete(deleteTour);
 
+// Users Route
+app.route('/api/v1/users').get(getAllUsers).post(createUser);
+app
+  .route('/api/v1/users/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
+
+// 4) START THE SERVER
 const port = 3000;
 
 app.listen(port, () => {
