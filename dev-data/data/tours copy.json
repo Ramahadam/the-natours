@@ -459,14 +459,12 @@
         "day": 3
       },
       {
-        "_id": " ",
+        "_id": "5c88fa8cf4afda39709c296d",
         "description": "Raymond Vineyard and Cellar",
         "type": "Point",
         "coordinates": [-122.434697, 38.482181],
         "day": 5
       }
     ]
-  },
-  { "id": 1, "name": "test create tour", "duration": 10, "diffculty": "easy" },
-  { "id": 2, "name": "test create tour", "duration": 10, "diffculty": "easy" }
+  }
 ]
