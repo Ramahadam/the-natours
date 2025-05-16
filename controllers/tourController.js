@@ -1,87 +1,65 @@
-const fs = require('fs');
+const Tour = require('../models/tourModel');
 
-const tours = JSON.parse(
-  fs.readFileSync(
-    `${__dirname}/../dev-data/data/tours.json`,
-    'utf-8',
-  ),
-);
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
 
-exports.checkId = (req, res, next, val) => {
-  const id = Number(val.id);
-
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: 'Fail',
-      message: 'Invalid id',
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours,
+      },
     });
-  }
-
-  next();
-};
-
-exports.checkBody = (req, res, next) => {
-  console.log(req.body);
-  if (!req.body.name || !req.body.price) {
-    return res.status(400).json({
+  } catch (err) {
+    res.status(404).json({
       status: 'fail',
-      message: 'Bad request',
+      message: {
+        err,
+      },
     });
   }
-
-  next();
 };
 
-exports.getAllTours = (req, res) => {
-  console.log(req.requestedAt);
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
-};
+exports.getTour = async (req, res) => {
+  try {
+    // const tour = await Tour.findOne({_id: req.params.id})
+    const tour = await Tour.findById(req.params.id);
 
-exports.getTour = (req, res) => {
-  const { id } = Number(req.params);
-
-  const tour = tours.find((el) => el.id === id);
-
-  if (!tour) {
-    return res.status(404).json({
+    res.status(200).json({
+      status: 'sccuess',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
       status: 'fail',
-      message: 'Invalid Id',
+      message: {
+        err,
+      },
     });
   }
-
-  res.status(200).json({
-    status: 'sccuess',
-    data: {
-      tour,
-    },
-  });
 };
 
-exports.createTour = (req, res) => {
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+exports.createTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body);
 
-  tours.push(newTour);
-
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours.json`,
-    JSON.stringify(tours),
-    'utf-8',
-    (err) => {
-      res.status(201).json({
-        status: 'success',
-        data: {
-          tour: newTour,
-        },
-      });
-    },
-  );
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: {
+        err,
+      },
+    });
+  }
 };
 
 exports.updateTour = (req, res) => {
