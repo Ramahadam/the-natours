@@ -18,7 +18,6 @@ mongoose
   })
   .then((con) => {
     console.log('Connection established ✅');
-    console.log(con.connections);
   });
 
 const port = process.env.PORT || 3000;
