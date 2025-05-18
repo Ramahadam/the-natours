@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-
+const Tour = require('./models/tourModel');
 const server = http.createServer((req, res) => {
   const pathName = req.url;
 
@@ -12,3 +12,5 @@ const server = http.createServer((req, res) => {
 server.listen(3001, (req, res) => {
   console.log('Listening for incomming request');
 });
+
+// ______________________________________________________________________________________
