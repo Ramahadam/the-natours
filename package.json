@@ -12,6 +12,7 @@
     "debug": "ndb server.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "mongoose": "^5.13.23",
@@ -27,7 +28,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-react": "^7.37.5",
-    "ndb": "^1.1.5",
+    "ndb": "^0.2.4",
     "prettier": "^3.5.3"
   }
 }
