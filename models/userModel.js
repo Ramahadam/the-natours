@@ -32,6 +32,7 @@ const userSchema = mongoose.Schema({
       message: 'Passwords are not the same',
     },
   },
+  passwordChangedAt: Date,
 });
 
 // Encypt password using mongoose pre middleware.
@@ -56,6 +57,23 @@ userSchema.methods.correctPassword = async function (
   userPassword,
 ) {
   return await bcrypt.compare(candiatePassword, userPassword);
+};
+
+userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const passwordChange = this.passwordChangedAt.getTime();
+    console.log(
+      'passwordChangedAt:',
+      passwordChange,
+      '/n',
+      'JWTTIMESSTAMP',
+      JWTTimestamp,
+    );
+
+    return JWTTimestamp < passwordChange;
+  }
+
+  return false;
 };
 
 const User = mongoose.model('User', userSchema);
