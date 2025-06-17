@@ -58,6 +58,16 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+// Update changedPassword At property for the user
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+
+  next();
+});
+
 // create an instance method that persists accross all user document for comparing password
 
 userSchema.methods.correctPassword = async function (
