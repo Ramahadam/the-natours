@@ -21,9 +21,7 @@ mongoose
     // console.log(con.connections);
   });
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'),
-);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
 // IMPORT DATA INTO DB
 
@@ -42,6 +40,7 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
+    ``;
     await Tour.deleteMany();
     console.log('Data successflly deleted');
   } catch (err) {

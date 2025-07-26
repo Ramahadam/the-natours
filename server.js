@@ -14,10 +14,15 @@ process.on('uncaughtException', (err) => {
 
 const app = require('./app');
 
+// Below section to connect to DB
+// First create the database string
+
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD,
 );
+
+// connect to MonogoDB using Mongoose
 
 mongoose
   .connect(DB, {

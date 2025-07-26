@@ -53,7 +53,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  console.log('login handle controler');
   const { email, password } = req.body;
 
   // 01) Check if email and password exist
