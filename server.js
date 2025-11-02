@@ -24,15 +24,18 @@ const DB = process.env.DATABASE.replace(
 
 // connect to MonogoDB using Mongoose
 
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
-  .then((con) => {
-    console.log('Connection established ✅');
-  });
+mongoose.connect(DB).then((con) => {
+  console.log('Connection established ✅');
+});
+// mongoose
+//   .connect(DB, {
+//     useNewUrlParser: true,
+//     useCreateIndex: true,
+//     useFindAndModify: false,
+//   })
+//   .then((con) => {
+//     console.log('Connection established ✅');
+//   });
 
 const port = process.env.PORT || 3000;
 
@@ -42,7 +45,7 @@ const server = app.listen(port, () => {
 
 // Handle errors (Unhandle Rejection)
 process.on('unhandledRejection', (err) => {
-  console.log('Unhanle Rejection');
+  console.log('Unhandle Rejection');
   console.log(err.name, err.message);
 
   server.close(() => {

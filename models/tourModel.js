@@ -125,6 +125,13 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+// Virtual populate
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 // DOCUMENT MIDDLEWARE :
 // PRE MIDDLEWARE => runs only bfore .save() and .create() it won't run in saveMany.
 
@@ -134,6 +141,12 @@ tourSchema.pre('save', function (next) {
     replacement: '_',
   });
   // console.log(this);
+  next();
+});
+
+tourSchema.pre('findOne', function (next) {
+  this.populate('reviews');
+
   next();
 });
 
