@@ -75,6 +75,7 @@ app.use((req, res, next) => {
 const tourRouter = require(`./routes/tourRoutes`);
 const userRouter = require(`./routes/userRoutes`);
 const reviewRouter = require(`./routes/reviewRoutes`);
+const Sport = require('./models/testModel');
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

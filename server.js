@@ -22,6 +22,10 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD,
 );
 
+// Disable buffering to catch mongoose DB connection issue.
+
+mongoose.set('bufferCommands', false);
+
 // connect to MonogoDB using Mongoose
 
 mongoose.connect(DB).then((con) => {
