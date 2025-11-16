@@ -22,15 +22,22 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD,
 );
 
-// Disable buffering to catch mongoose DB connection issue.
+// Disable buffering to catch mongoose DB connection
 
 mongoose.set('bufferCommands', false);
 
 // connect to MonogoDB using Mongoose
 
-mongoose.connect(DB).then((con) => {
-  console.log('Connection established ✅');
-});
+mongoose
+  .connect(DB)
+  .then((con) => {
+    console.log('Connection established ✅');
+  })
+  .catch((error) => console.log(error));
+
+// Handle errors after initial connection was established
+mongoose.connection.on('error', (err) => console.log(err));
+
 // mongoose
 //   .connect(DB, {
 //     useNewUrlParser: true,

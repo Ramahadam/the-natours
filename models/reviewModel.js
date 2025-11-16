@@ -11,10 +11,6 @@ const reviewSchema = mongoose.Schema(
       min: 1,
       max: 5,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
     tour: {
       type: mongoose.Schema.ObjectId,
       ref: 'Tour',
@@ -26,6 +22,7 @@ const reviewSchema = mongoose.Schema(
       required: [true, 'A review must belong to a user'],
     },
   },
+  { timestamps: true },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
