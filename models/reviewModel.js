@@ -61,10 +61,17 @@ reviewSchema.statics.calcRatingAverage = async function (tourId) {
     },
   ]);
 
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsAverage: stats[0].avgRatings,
-    ratingsQuantity: stats[0].nRating,
-  });
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsAverage: stats[0].avgRatings,
+      ratingsQuantity: stats[0].nRating,
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsAverage: 4.5,
+      ratingsQuantity: 0,
+    });
+  }
 };
 
 reviewSchema.post('save', function (next) {
