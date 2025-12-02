@@ -135,6 +135,10 @@ tourSchema.virtual('reviews', {
 // DOCUMENT MIDDLEWARE :
 // PRE MIDDLEWARE => runs only bfore .save() and .create() it won't run in saveMany.
 
+// tourSchema.index({ price: 1 });
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, {
     lower: true,
