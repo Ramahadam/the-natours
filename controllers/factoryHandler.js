@@ -71,7 +71,6 @@ exports.getAll = (Modle) =>
   catchAsync(async (req, res, next) => {
     // Allow filter for reviews
     // const reviews = await Review.find(filter);
-
     let filter = {};
     if (req.params.tourId) filter = { tour: req.params.tourId };
 
