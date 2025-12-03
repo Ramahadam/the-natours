@@ -106,10 +106,6 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 exports.tourWithin = catchAsync(async (req, res, next) => {
   const { distance, latlang, unit } = req.params;
 
-  if (!distance || !latlang) {
-    next(new AppError('Please specify distance, coordinates ', 400));
-  }
-
   //Convert Miles to Radians  miles / 3963.2
   //Convert Kilometers to Radians km / 6378.1
   // https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/#mongodb-query-op.-centerSphere
@@ -123,6 +119,10 @@ exports.tourWithin = catchAsync(async (req, res, next) => {
   */
   const [lat, long] = latlang.split(',');
 
+  if (!lat || !long) {
+    next(new AppError('Please specify distance, coordinates ', 400));
+  }
+
   const radius = unit === 'mil' ? distance / 3963.2 : distance / 6378.1;
 
   const tours = await Tour.find({
@@ -134,6 +134,41 @@ exports.tourWithin = catchAsync(async (req, res, next) => {
     results: tours.length,
     data: {
       data: tours,
+    },
+  });
+});
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlang, unit } = req.params;
+
+  const [lat, long] = latlang.split(',');
+
+  if (!lat || !long) {
+    next(new AppError('Please specify distance, coordinates ', 400));
+  }
+  console.log(unit);
+  const mutlipler = unit === 'mil' ? 0.000621371 : 0.001;
+
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [long * 1, lat * 1],
+        },
+        distanceField: 'distances',
+        distanceMultiplier: mutlipler,
+      },
+    },
+    {
+      $project: { name: 1, distances: 1 },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: distances,
     },
   });
 });

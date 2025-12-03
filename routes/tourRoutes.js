@@ -41,6 +41,8 @@ router
   .route('/tours-within/distance/:distance/center/:latlang/unit/:unit')
   .get(tourController.tourWithin);
 
+router.route('/distances/:latlang/unit/:unit').get(tourController.getDistances);
+
 router
   .route('/')
   .get(tourController.getAllTours)

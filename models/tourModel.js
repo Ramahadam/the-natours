@@ -140,7 +140,7 @@ tourSchema.virtual('reviews', {
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
 
-tourSchema.index({ startLocation: '$2dsphere' });
+tourSchema.index({ startLocation: '2dsphere' });
 
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, {
@@ -193,11 +193,11 @@ tourSchema.post(/^find/, function (doc, next) {
 
 // AGGREGATION MIDDLEWARE:=> Allows us to add hooks before or after the aggregation happen
 // Below are excluding the secure tours for tours stats route where are using aggregation
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
 
-  next();
-});
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
