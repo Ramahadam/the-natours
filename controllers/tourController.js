@@ -2,6 +2,7 @@ const Tour = require('../models/tourModel');
 
 const factory = require('./factoryHandler');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -96,6 +97,43 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       stats,
+    },
+  });
+});
+
+//{{URL}}api/v1/tours/tours-within/distance/400/center/34.05361066334421, -118.28682275401789/mil
+// .route('/tours-within/distance/:distance/center/:latlang/unit/:mil')
+exports.tourWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlang, unit } = req.params;
+
+  if (!distance || !latlang) {
+    next(new AppError('Please specify distance, coordinates ', 400));
+  }
+
+  //Convert Miles to Radians  miles / 3963.2
+  //Convert Kilometers to Radians km / 6378.1
+  // https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/#mongodb-query-op.-centerSphere
+  /**
+  * 
+  * {
+   <location field>: {
+      $geoWithin: { $centerSphere: [ [ <x>, <y> ], <radius> ] }
+   }
+}
+  */
+  const [lat, long] = latlang.split(',');
+
+  const radius = unit === 'mil' ? distance / 3963.2 : distance / 6378.1;
+
+  const tours = await Tour.find({
+    startLocation: { $geoWithin: { $centerSphere: [[long, lat], radius] } },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      data: tours,
     },
   });
 });

@@ -38,6 +38,10 @@ router
   );
 
 router
+  .route('/tours-within/distance/:distance/center/:latlang/unit/:unit')
+  .get(tourController.tourWithin);
+
+router
   .route('/')
   .get(tourController.getAllTours)
   .post(
