@@ -113,6 +113,36 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.isLoggedIn = async (req, res, next) => {
+  // 01) Check if the cookies exist
+
+  if (req.cookies.jwt) {
+    // 02) Verification of the JWT in the cookies
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET,
+    );
+
+    // 03) Check if the user still exists
+    const currentUser = await User.findById(decoded.id);
+
+    if (!currentUser) {
+      return next();
+    }
+
+    // 04) Check if the user changed the password after the token was issued.
+    if (currentUser.changePasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    // If there is loggedin user add the current user to local this will be used in inside pug template
+    res.locals.user = currentUser;
+
+    next();
+  }
+  next();
+};
+
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // roles is an array ['admin','lead-guide'] .
