@@ -20,7 +20,21 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // SET HTTP security headers
-app.use(helmet());
+// SAFE: Configure a specific, secure policy - axios CDN was blocked so excluded from helmet
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        'https://cdn.jsdelivr.net',
+        'https://cdnjs.cloudflare.com',
+      ],
+      connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
+    },
+  }),
+);
 
 // Development loggin
 if (process.env.NODE_ENV === 'development') {
