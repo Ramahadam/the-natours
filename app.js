@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
+
 const AppError = require('./utils/appError');
 
 const globalErrorHandler = require('./controllers/errorController');
@@ -58,6 +60,7 @@ const limiter = rateLimit({
 
 // Use limit middleware to limit the number of requests
 app.use('/api', limiter);
+app.use(cookieParser());
 
 // Prevent Parameter pollution
 app.use(
@@ -76,6 +79,7 @@ app.use(
 // Test middleware
 app.use((req, res, next) => {
   req.requestedAt = new Date().toISOString();
+  console.log('Cookies: ', req.cookies);
 
   next();
 });

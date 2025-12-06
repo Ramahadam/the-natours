@@ -33,9 +33,9 @@ const reviews = JSON.parse(
 
 const importData = async () => {
   try {
-    // await Tour.create(tours); // we can use create method to create bulk document
+    await Tour.create(tours); // we can use create method to create bulk document
     await User.create(users, { validateBeforeSave: false });
-    // await Review.create(reviews);
+    await Review.create(reviews);
     console.log('Data successflly loaded');
   } catch (err) {
     console.log(err);
