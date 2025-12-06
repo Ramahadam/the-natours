@@ -10,7 +10,7 @@ exports.getOverview = catchAsync(async (req, res) => {
   });
 });
 
-exports.getTour = catchAsync(async (req, res) => {
+exports.getTour = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
 
   //Get tour data
@@ -24,3 +24,9 @@ exports.getTour = catchAsync(async (req, res) => {
     tour,
   });
 });
+
+exports.getLoginFrom = (req, res) => {
+  res.status(200).render('login', {
+    title: 'Login into your account',
+  });
+};
