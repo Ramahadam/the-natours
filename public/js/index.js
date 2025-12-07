@@ -1,8 +1,9 @@
 /* eslint-disable */
 
-import { login } from './login';
+import { login, logout } from './login';
 
 const form = document.querySelector('.form');
+const logoutBtn = document.querySelector('.nav__el.nav__el--logout');
 
 if (form) {
   form.addEventListener('submit', (e) => {
@@ -12,3 +13,5 @@ if (form) {
     login(email, password);
   });
 }
+
+if (logoutBtn) logoutBtn.addEventListener('click', logout);

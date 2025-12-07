@@ -70,6 +70,17 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+exports.logout = (req, res, next) => {
+  res.cookie('jwt', 'logout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    status: 'success',
+  });
+};
+
 exports.protect = catchAsync(async (req, res, next) => {
   // 01) Getting token and check if it's there.
 
@@ -117,28 +128,32 @@ exports.isLoggedIn = async (req, res, next) => {
   // 01) Check if the cookies exist
 
   if (req.cookies.jwt) {
-    // 02) Verification of the JWT in the cookies
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET,
-    );
+    try {
+      // 02) Verification of the JWT in the cookies
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET,
+      );
 
-    // 03) Check if the user still exists
-    const currentUser = await User.findById(decoded.id);
+      // 03) Check if the user still exists
+      const currentUser = await User.findById(decoded.id);
 
-    if (!currentUser) {
+      if (!currentUser) {
+        return next();
+      }
+
+      // 04) Check if the user changed the password after the token was issued.
+      if (currentUser.changePasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // If there is loggedin user add the current user to local this will be used in inside pug template
+      res.locals.user = currentUser;
+
+      return next();
+    } catch (error) {
       return next();
     }
-
-    // 04) Check if the user changed the password after the token was issued.
-    if (currentUser.changePasswordAfter(decoded.iat)) {
-      return next();
-    }
-
-    // If there is loggedin user add the current user to local this will be used in inside pug template
-    res.locals.user = currentUser;
-
-    return next();
   }
   next();
 };
