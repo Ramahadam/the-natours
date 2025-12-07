@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getOverview = catchAsync(async (req, res) => {
@@ -18,6 +19,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
     path: 'reviews',
     feild: 'rating user review',
   });
+
+  if (!tour)
+    return next(new AppError('Cannot find tour with mentioned slug', 400));
 
   res.status(200).render('tour', {
     title: tour.name,
