@@ -12,4 +12,6 @@ router.get('/', viewsController.getOverview);
 
 router.get('/tour/:slug', viewsController.getTour);
 
+router.get('/me', authContoller.protect, viewsController.getAccount);
+
 module.exports = router;
