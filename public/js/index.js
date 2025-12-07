@@ -2,7 +2,10 @@
 
 import { login, logout } from './login';
 
+import { updateSettings } from './updateSettings';
+
 const form = document.querySelector('.form--login');
+const formUpdateSettings = document.querySelector('.form-user-data');
 const logoutBtn = document.querySelector('.nav__el.nav__el--logout');
 
 if (form) {
@@ -14,4 +17,12 @@ if (form) {
   });
 }
 
+if (formUpdateSettings)
+  formUpdateSettings.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+
+    updateSettings({ name, email });
+  });
 if (logoutBtn) logoutBtn.addEventListener('click', logout);
