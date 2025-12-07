@@ -6351,22 +6351,18 @@ function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { 
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 var updateSettings = exports.updateSettings = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(_ref) {
-    var name, email, res, _t;
+  var _ref = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(data, type) {
+    var url, res, _t;
     return _regenerator().w(function (_context) {
       while (1) switch (_context.p = _context.n) {
         case 0:
-          name = _ref.name, email = _ref.email;
-          console.log(name, email);
+          url = type === 'data' ? 'http://127.0.0.1:3000/api/v1/users/updateMe' : 'http://127.0.0.1:3000/api/v1/users/updateMyPassword';
           _context.p = 1;
           _context.n = 2;
           return (0, _axios.default)({
-            url: 'http://127.0.0.1:3000/api/v1/users/updateMe',
+            url: url,
             method: 'PATCH',
-            data: {
-              name: name,
-              email: email
-            }
+            data: data
           });
         case 2:
           res = _context.v;
@@ -6384,8 +6380,8 @@ var updateSettings = exports.updateSettings = /*#__PURE__*/function () {
       }
     }, _callee, null, [[1, 3]]);
   }));
-  return function updateSettings(_x) {
-    return _ref2.apply(this, arguments);
+  return function updateSettings(_x, _x2) {
+    return _ref.apply(this, arguments);
   };
 }();
 },{"axios":"../../node_modules/axios/index.js"}],"index.js":[function(require,module,exports) {
@@ -6397,6 +6393,7 @@ var _updateSettings = require("./updateSettings");
 
 var form = document.querySelector('.form--login');
 var formUpdateSettings = document.querySelector('.form-user-data');
+var formUserPassword = document.querySelector('.form-user-password');
 var logoutBtn = document.querySelector('.nav__el.nav__el--logout');
 if (form) {
   form.addEventListener('submit', function (e) {
@@ -6413,7 +6410,18 @@ if (formUpdateSettings) formUpdateSettings.addEventListener('submit', function (
   (0, _updateSettings.updateSettings)({
     name: name,
     email: email
-  });
+  }, 'data');
+});
+if (formUserPassword) formUserPassword.addEventListener('submit', function (e) {
+  e.preventDefault();
+  var currentPassword = document.getElementById('password-current').value;
+  var newPassword = document.getElementById('password').value;
+  var passwordConfirm = document.getElementById('password-confirm').value;
+  (0, _updateSettings.updateSettings)({
+    currentPassword: currentPassword,
+    newPassword: newPassword,
+    passwordConfirm: passwordConfirm
+  }, 'password');
 });
 if (logoutBtn) logoutBtn.addEventListener('click', _login.logout);
 },{"./login":"login.js","./updateSettings":"updateSettings.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {

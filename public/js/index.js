@@ -6,6 +6,7 @@ import { updateSettings } from './updateSettings';
 
 const form = document.querySelector('.form--login');
 const formUpdateSettings = document.querySelector('.form-user-data');
+const formUserPassword = document.querySelector('.form-user-password');
 const logoutBtn = document.querySelector('.nav__el.nav__el--logout');
 
 if (form) {
@@ -23,6 +24,20 @@ if (formUpdateSettings)
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
 
-    updateSettings({ name, email });
+    updateSettings({ name, email }, 'data');
   });
+
+if (formUserPassword)
+  formUserPassword.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const currentPassword = document.getElementById('password-current').value;
+    const newPassword = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+
+    updateSettings(
+      { currentPassword, newPassword, passwordConfirm },
+      'password',
+    );
+  });
+
 if (logoutBtn) logoutBtn.addEventListener('click', logout);

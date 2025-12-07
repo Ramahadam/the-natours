@@ -1,16 +1,16 @@
 import axios from 'axios';
 
-export const updateSettings = async function ({ name, email }) {
-  console.log(name, email);
+export const updateSettings = async function (data, type) {
+  const url =
+    type === 'data'
+      ? 'http://127.0.0.1:3000/api/v1/users/updateMe'
+      : 'http://127.0.0.1:3000/api/v1/users/updateMyPassword';
 
   try {
     const res = await axios({
-      url: 'http://127.0.0.1:3000/api/v1/users/updateMe',
+      url,
       method: 'PATCH',
-      data: {
-        name,
-        email,
-      },
+      data: data,
     });
 
     if (res.data.status === 'success') {
