@@ -2,7 +2,7 @@
 
 import { login, logout } from './login';
 
-const form = document.querySelector('.form');
+const form = document.querySelector('.form--login');
 const logoutBtn = document.querySelector('.nav__el.nav__el--logout');
 
 if (form) {

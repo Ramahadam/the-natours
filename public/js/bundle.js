@@ -6343,7 +6343,7 @@ function _logout() {
 var _login = require("./login");
 /* eslint-disable */
 
-var form = document.querySelector('.form');
+var form = document.querySelector('.form--login');
 var logoutBtn = document.querySelector('.nav__el.nav__el--logout');
 if (form) {
   form.addEventListener('submit', function (e) {

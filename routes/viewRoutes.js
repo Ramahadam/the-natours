@@ -14,4 +14,10 @@ router.get('/tour/:slug', viewsController.getTour);
 
 router.get('/me', authContoller.protect, viewsController.getAccount);
 
+router.post(
+  '/submit-user-data',
+  authContoller.protect,
+  viewsController.updateUserDate,
+);
+
 module.exports = router;

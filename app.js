@@ -51,6 +51,7 @@ app.use(xss());
 
 // Body parser : reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 const limiter = rateLimit({
   max: 100,
@@ -79,7 +80,6 @@ app.use(
 // Test middleware
 app.use((req, res, next) => {
   req.requestedAt = new Date().toISOString();
-  console.log('Cookies: ', req.cookies);
 
   next();
 });
