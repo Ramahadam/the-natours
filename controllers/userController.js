@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./factoryHandler');
+const multer = require('multer');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -22,7 +23,35 @@ exports.getMe = (req, res, next) => {
   next();
 };
 
+const multerStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/img/users');
+  },
+  filename: function (req, file, cb) {
+    const extension = file.mimetype.split('/')[1];
+    const filename = `user-${req.user.id}-${Date.now()}.${extension}`;
+    cb(null, filename);
+  },
+});
+
+function multerFileFilter(req, file, cb) {
+  if (file.mimetype.startsWith('image')) cb(null, true);
+  else
+    cb(
+      new AppError('Invalid file extension, please use image format', 400),
+      false,
+    );
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFileFilter,
+});
+
+exports.uploadUserPhoto = upload.single('photo');
+
 exports.updateMe = catchAsync(async (req, res, next) => {
+  console.log(req.file);
   // Create error if user post password data
   if (req.body.password || req.body.passwordConfirm)
     return next(
