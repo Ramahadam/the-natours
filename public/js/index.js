@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import { login, logout } from './login';
+import axios from 'axios';
 
 import { updateSettings } from './updateSettings';
 
@@ -19,17 +20,25 @@ if (form) {
 }
 
 if (formUpdateSettings)
-  formUpdateSettings.addEventListener('submit', (e) => {
+  formUpdateSettings.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
 
-    updateSettings({ name, email }, 'data');
+    const formData = new FormData();
+    formData.append('name', document.getElementById('name').value);
+    formData.append('email', document.getElementById('email').value);
+    const filePhoto = document.getElementById('photo');
+
+    if (filePhoto.files.length > 0) {
+      formData.append('photo', filePhoto.files[0]);
+    }
+
+    await updateSettings(formData, 'data');
   });
 
 if (formUserPassword)
   formUserPassword.addEventListener('submit', (e) => {
     e.preventDefault();
+
     const currentPassword = document.getElementById('password-current').value;
     const newPassword = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('password-confirm').value;

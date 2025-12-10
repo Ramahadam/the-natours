@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const updateSettings = async function (data, type) {
+export async function updateSettings(data, type) {
   const url =
     type === 'data'
       ? 'http://127.0.0.1:3000/api/v1/users/updateMe'
@@ -11,12 +11,14 @@ export const updateSettings = async function (data, type) {
       url,
       method: 'PATCH',
       data: data,
+      transformRequest: (data, headers) => data,
     });
 
     if (res.data.status === 'success') {
-      location.reload(true);
+      // location.reload(true);
+      console.log(res);
     }
   } catch (error) {
     console.log(error);
   }
-};
+}

@@ -1,10 +1,9 @@
+const sharp = require('sharp');
+const multer = require('multer');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./factoryHandler');
-const sharp = require('sharp');
-
-const multer = require('multer');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -25,20 +24,20 @@ exports.getMe = (req, res, next) => {
   next();
 };
 
-// const multerStorage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'public/img/users');
-//   },
-//   filename: function (req, file, cb) {
-//     const extension = file.mimetype.split('/')[1];
-//     const filename = `user-${req.user.id}-${Date.now()}.${extension}`;
-//     cb(null, filename);
-//   },
-// });
+const multerStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/img/users');
+  },
+  filename: function (req, file, cb) {
+    const extension = file.mimetype.split('/')[1];
+    const filename = `user-${req.user.id}-${Date.now()}.${extension}`;
+    cb(null, filename);
+  },
+});
 
 // Store the photo to memory so we can use it in sharp to resize the image
 
-const multerStorage = multer.memoryStorage();
+// const multerStorage = multer.memoryStorage();
 
 function multerFileFilter(req, file, cb) {
   if (file.mimetype.startsWith('image')) cb(null, true);
@@ -56,22 +55,24 @@ const upload = multer({
 
 exports.uploadUserPhoto = upload.single('photo');
 
-exports.resizeUserPhoto = (req, res, next) => {
-  if (!req.file) return next();
+exports.resizeUserPhoto = async (req, res, next) => {
+  // if (!req.file) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  // req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
-  sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
+  // await sharp(req.file.buffer)
+  //   .resize(500, 500)
+  //   .toFormat('jpeg')
+  //   .jpeg({ quality: 90 })
+  //   .toFile(`public/img/users/${req.file.filename}`);
 
   next();
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  console.log(req.file);
+  console.log('req file 🚩🪤🧲🪤⛑️', req.file, req.body);
+  console.log('CT:', req.headers['content-type']);
+
   // Create error if user post password data
   if (req.body.password || req.body.passwordConfirm)
     return next(
