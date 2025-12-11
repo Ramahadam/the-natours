@@ -1,8 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const nodemailer = require('nodemailer');
 
-const Mailjet = require('node-mailjet');
-
 const { convert } = require('html-to-text');
 
 const pug = require('pug');
@@ -13,45 +11,6 @@ module.exports = class Email {
     this.to = user.email;
     this.url = url;
     this.from = `Mohamed Adam <${process.env.EMAIL_FROM}>`;
-  }
-
-  // Send emails to production using Mailjet
-  //TODO test if mailjet function is working
-
-  sendEmailsByMailjet() {
-    const mailjet = Mailjet.apiConnect(
-      process.env.MJ_APIKEY_PUBLIC,
-      process.env.MJ_APIKEY_PRIVATE,
-    );
-
-    const request = mailjet.post('send', { version: 'v3.1' }).request({
-      Messages: [
-        {
-          From: {
-            Email: 'pilot@mailjet.com',
-            Name: 'Mailjet Pilot',
-          },
-          To: [
-            {
-              Email: 'ramy.adam33@gmail.com',
-              Name: 'Ramy Adam',
-            },
-          ],
-          Subject: 'Testing emails!',
-          TextPart: 'Dear user, This is test email from mailtest',
-          HTMLPart:
-            '<h3>Dear passenger 1, welcome to <a href="https://www.mailjet.com/">Mailjet</a>!</h3><br />May the delivery force be with you!',
-        },
-      ],
-    });
-
-    request
-      .then((result) => {
-        console.log(result.body);
-      })
-      .catch((err) => {
-        console.log(err.statusCode);
-      });
   }
 
   // create transport based on enviroment
@@ -105,7 +64,7 @@ module.exports = class Email {
   }
 
   // Send password reset
-  // TODO test if password reset functionality is working
+
   async sendPasswordReset() {
     await this.send(
       'passwordReset',
