@@ -55,11 +55,20 @@ module.exports = class Email {
     };
 
     // 03. Send the actual email with nodemailr
-    await this.newTransport.sendMail(mailOptions);
+    await this.newTransport().sendMail(mailOptions);
   }
 
   // Send welcome email
   async sendWelcome() {
     await this.send('welcome', 'Weclome to natours family');
+  }
+
+  // Send password reset
+
+  async sendPasswordReset() {
+    await this.send(
+      'passwordReset',
+      'Your password reset token (Valid for 10 minutes)',
+    );
   }
 };
