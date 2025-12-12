@@ -105,7 +105,6 @@ module.exports = class Email {
   }
 
   // Send password reset
-  // TODO test if password reset functionality is working
   async sendPasswordReset() {
     await this.send(
       'passwordReset',
