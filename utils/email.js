@@ -18,50 +18,39 @@ module.exports = class Email {
   // Send emails to production using Mailjet
   //TODO test if mailjet function is working
 
-  sendEmailsByMailjet() {
-    const mailjet = Mailjet.apiConnect(
-      process.env.MJ_APIKEY_PUBLIC,
-      process.env.MJ_APIKEY_PRIVATE,
-    );
+  async sendEmailToProd(mailOptions) {
+    try {
+      const mailjet = Mailjet.apiConnect(
+        process.env.MJ_APIKEY_PUBLIC,
+        process.env.MJ_APIKEY_PRIVATE,
+      );
 
-    const request = mailjet.post('send', { version: 'v3.1' }).request({
-      Messages: [
-        {
-          From: {
-            Email: 'pilot@mailjet.com',
-            Name: 'Mailjet Pilot',
-          },
-          To: [
-            {
+      mailjet.post('send', { version: 'v3.1' }).request({
+        Messages: [
+          {
+            From: {
               Email: 'ramy.adam33@gmail.com',
-              Name: 'Ramy Adam',
+              Name: 'Mohamed Adam natours app',
             },
-          ],
-          Subject: 'Testing emails!',
-          TextPart: 'Dear user, This is test email from mailtest',
-          HTMLPart:
-            '<h3>Dear passenger 1, welcome to <a href="https://www.mailjet.com/">Mailjet</a>!</h3><br />May the delivery force be with you!',
-        },
-      ],
-    });
-
-    request
-      .then((result) => {
-        console.log(result.body);
-      })
-      .catch((err) => {
-        console.log(err.statusCode);
+            To: [
+              {
+                Email: mailOptions.to,
+              },
+            ],
+            Subject: mailOptions.subject,
+            TextPart: mailOptions.text,
+            HTMLPart: mailOptions.html,
+          },
+        ],
       });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // create transport based on enviroment
 
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
-      // Send real eamil to customer in production using sendgrid
-      return 1;
-    }
-
     // Send mailtrap in development
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -95,8 +84,15 @@ module.exports = class Email {
       text: convert(html),
     };
 
-    // 03. Send the actual email with nodemailr
-    await this.newTransport().sendMail(mailOptions);
+    // 03. Send the actual email
+
+    if (process.env.NODE_ENV === 'production') {
+      //Production env send email to prod using mailjet
+      await this.sendEmailToProd(mailOptions);
+    } else {
+      // Developement env - send email to mailtrap
+      await this.newTransport().sendMail(mailOptions);
+    }
   }
 
   // Send welcome email
