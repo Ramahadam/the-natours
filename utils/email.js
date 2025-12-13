@@ -16,7 +16,6 @@ module.exports = class Email {
   }
 
   // Send emails to production using Mailjet
-  //TODO test if mailjet function is working
 
   async sendEmailToProd(mailOptions) {
     try {
