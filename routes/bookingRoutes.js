@@ -12,4 +12,10 @@ router.get(
   bookingController.getCheckoutSession,
 );
 
+router.get('/', bookingController.getAllBookings);
+router.get('/:id', bookingController.getBooking);
+router.post('/', bookingController.createBooking);
+router.patch('/:id', bookingController.updateBooking);
+router.delete('/:id', bookingController.deleteBooking);
+
 module.exports = router;
