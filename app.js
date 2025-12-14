@@ -8,8 +8,6 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 
-const compression = require('compression');
-
 const AppError = require('./utils/appError');
 
 const globalErrorHandler = require('./controllers/errorController');
@@ -78,9 +76,6 @@ app.use(
     ],
   }),
 );
-
-//Compress response bodies for all requests that traverse through the middleware
-app.use(compression);
 
 // Test middleware
 app.use((req, res, next) => {
