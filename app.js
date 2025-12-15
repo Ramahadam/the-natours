@@ -12,6 +12,8 @@ const AppError = require('./utils/appError');
 
 const globalErrorHandler = require('./controllers/errorController');
 
+const bookingController = require('./controllers/bookingController');
+
 const app = express();
 
 app.enable('trust proxy');
@@ -29,23 +31,6 @@ app.set('views', path.join(__dirname, 'views'));
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// SET HTTP security headers
-// SAFE: Configure a specific, secure policy - axios CDN was blocked so excluded from helmet
-// app.use(
-//   helmet.contentSecurityPolicy({
-//     directives: {
-//       defaultSrc: ["'self'"],
-//       scriptSrc: [
-//         "'self'",
-//         "'unsafe-inline'",
-//         'https://cdn.jsdelivr.net',
-//         'https://cdnjs.cloudflare.com',
-//       ],
-//       connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
-//     },
-//   }),
-// );
-
 // Development loggin
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -56,6 +41,14 @@ app.use(mongoSanitize());
 
 // Data sanitisation against XXS attack
 app.use(xss());
+
+// The express.raw middleware keeps the request body unparsed;
+// this is necessary for the signature verification process
+app.post(
+  '/checkout-webhooks',
+  express.raw({ type: 'application/json' }),
+  bookingController.checkoutWebhooks,
+);
 
 // Body parser : reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
