@@ -8230,7 +8230,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
                         _context.n = 2;
                         return (0, _axios.default)({
                           method: 'POST',
-                          url: 'http://127.0.0.1:3000/api/v1/users/login',
+                          url: '/api/v1/users/login',
                           data: {
                             email: email,
                             password: password,
@@ -8277,7 +8277,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
                         _context2.n = 1;
                         return (0, _axios.default)({
                           method: 'GET',
-                          url: 'http://127.0.0.1:3000/api/v1/users/logout',
+                          url: '/api/v1/users/logout',
                         });
                       case 1:
                         res = _context2.v;
@@ -8534,8 +8534,8 @@ parcelRequire = (function (modules, cache, entry, globalName) {
                         case 0:
                           url =
                             type === 'data'
-                              ? 'http://127.0.0.1:3000/api/v1/users/updateMe'
-                              : 'http://127.0.0.1:3000/api/v1/users/updateMyPassword';
+                              ? '/api/v1/users/updateMe'
+                              : '/api/v1/users/updateMyPassword';
                           _context.p = 1;
                           _context.n = 2;
                           return (0, _axios.default)({
