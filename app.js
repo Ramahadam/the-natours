@@ -7,7 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
-
+const cors = require('cors');
 const AppError = require('./utils/appError');
 
 const globalErrorHandler = require('./controllers/errorController');
@@ -15,6 +15,12 @@ const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 app.enable('trust proxy');
+
+// Allow-access-controll origin
+app.use(cors());
+
+// Include POST,PATCH,DELET to cors using app.options
+app.options('*', cors()); // include before other routes
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
