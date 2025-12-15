@@ -2,6 +2,7 @@
 
 import { login, logout } from './login';
 import axios from 'axios';
+import { bookTour } from './stripe';
 
 import { updateSettings } from './updateSettings';
 
@@ -9,6 +10,7 @@ const form = document.querySelector('.form--login');
 const formUpdateSettings = document.querySelector('.form-user-data');
 const formUserPassword = document.querySelector('.form-user-password');
 const logoutBtn = document.querySelector('.nav__el.nav__el--logout');
+const bookBtn = document.getElementById('book-tour');
 
 if (form) {
   form.addEventListener('submit', (e) => {
@@ -47,6 +49,13 @@ if (formUserPassword)
       { currentPassword, newPassword, passwordConfirm },
       'password',
     );
+  });
+
+if (bookBtn)
+  bookBtn.addEventListener('click', (e) => {
+    e.target.textContent = 'Processing...';
+    const { tourId } = e.target.dataset;
+    bookTour(tourId);
   });
 
 if (logoutBtn) logoutBtn.addEventListener('click', logout);
